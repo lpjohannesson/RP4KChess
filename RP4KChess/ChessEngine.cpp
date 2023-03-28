@@ -11,15 +11,41 @@ void ChessEngine::SetDrawColor(glm::ivec4 color) {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 
+void ChessEngine::TryMovingTo(glm::ivec2 pos) {
+	ChessCell selectedCell = board.GetCell(selectedPos);
+	ChessPiece* selectedPiece = board.GetPieceFromType(selectedCell.type);
+
+	if (selectedPiece == nullptr) {
+		return;
+	}
+
+	std::vector<glm::ivec2> possibleMoves;
+	selectedPiece->GetPossibleMoves(selectedPos, board, possibleMoves);
+
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), pos) != possibleMoves.end()) {
+		board.MoveCell(selectedPos, pos);
+	}
+
+	isCellSelected = false;
+}
+
+void ChessEngine::TrySelecting(glm::ivec2 pos) {
+	ChessCell cell = board.GetCell(pos);
+
+	if (cell.type != PieceType::None) {
+		selectedPos = pos;
+		isCellSelected = true;
+	}
+}
+
 void ChessEngine::MouseClicked(glm::ivec2 pos) {
 	glm::ivec2 boardPos = (pos - board.GetBoardPos()) / board.cellSize;
 
-	if (board.GetCell(boardPos).type == PieceType::None) {
-		isCellSelected = false;
+	if (isCellSelected) {
+		TryMovingTo(boardPos);
 	}
 	else {
-		selectedCell = boardPos;
-		isCellSelected = true;
+		TrySelecting(boardPos);
 	}
 
 	Render();
@@ -91,11 +117,11 @@ void ChessEngine::Render() {
 	board.RenderBoard();
 
 	if (isCellSelected) {
-		ChessPiece* piece = board.GetPieceFromType(board.GetCell(selectedCell).type);
+		ChessPiece* piece = board.GetPieceFromType(board.GetCell(selectedPos).type);
 
 		if (piece != nullptr) {
 			std::vector<glm::ivec2> possibleMoves;
-			piece->GetPossibleMoves(selectedCell, board, possibleMoves);
+			piece->GetPossibleMoves(selectedPos, board, possibleMoves);
 
 			SetDrawColor(moveColor);
 

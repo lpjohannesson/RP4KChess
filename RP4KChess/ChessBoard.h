@@ -65,6 +65,8 @@ public:
 	ChessCell GetCell(glm::ivec2 pos);
 	void SetCell(glm::ivec2 pos, ChessCell cell);
 
+	void MoveCell(glm::ivec2 from, glm::ivec2 to);
+
 	bool CellInRange(glm::ivec2 pos);
 
 	ChessPiece* GetPieceFromType(PieceType type);

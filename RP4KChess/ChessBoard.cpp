@@ -62,6 +62,13 @@ void ChessBoard::SetCell(glm::ivec2 pos, ChessCell cell) {
 	cells[GetCellIndex(pos)] = cell;
 }
 
+void ChessBoard::MoveCell(glm::ivec2 from, glm::ivec2 to) {
+	ChessCell cell = GetCell(from);
+	
+	SetCell(from, { PieceType::None });
+	SetCell(to, cell);
+}
+
 bool ChessBoard::CellInRange(glm::ivec2 pos) {
 	return
 		pos.x >= 0 && pos.x < size.x&&

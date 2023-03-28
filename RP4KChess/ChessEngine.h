@@ -14,10 +14,13 @@ public:
 	ChessBoard board{ { 8, 8 } };
 
 	bool isCellSelected = false;
-	glm::ivec2 selectedCell{};
+	glm::ivec2 selectedPos{};
 
 	glm::ivec2 GetWindowSize();
 	void SetDrawColor(glm::ivec4 color);
+
+	void TryMovingTo(glm::ivec2 pos);
+	void TrySelecting(glm::ivec2 pos);
 
 	void MouseClicked(glm::ivec2 pos);
 
