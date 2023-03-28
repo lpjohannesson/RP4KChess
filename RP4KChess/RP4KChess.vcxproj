@@ -128,16 +128,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BishopPiece.cpp" />
-    <ClCompile Include="BoardWalker.cpp" />
+    <ClCompile Include="KingPiece.cpp" />
+    <ClCompile Include="KnightPiece.cpp" />
+    <ClCompile Include="MoveBuilder.cpp" />
     <ClCompile Include="ChessBoard.cpp" />
     <ClCompile Include="ChessEngine.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PawnPiece.cpp" />
     <ClCompile Include="QueenPiece.cpp" />
     <ClCompile Include="RookPiece.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BishopPiece.h" />
-    <ClInclude Include="BoardWalker.h" />
+    <ClInclude Include="MoveBuilder.h" />
     <ClInclude Include="ChessBoard.h" />
     <ClInclude Include="ChessEngine.h" />
     <ClInclude Include="ChessPiece.h" />
@@ -146,6 +149,9 @@
     <ClInclude Include="PawnPiece.h" />
     <ClInclude Include="QueenPiece.h" />
     <ClInclude Include="RookPiece.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\pieces.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

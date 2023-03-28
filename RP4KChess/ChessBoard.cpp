@@ -12,6 +12,10 @@ ChessBoard::ChessBoard(glm::ivec2 size) {
 	SetSize(size);
 }
 
+glm::ivec2 ChessBoard::GetSize() {
+	return size;
+}
+
 void ChessBoard::SetSize(glm::ivec2 size) {
 	this->size = size;
 
@@ -97,6 +101,9 @@ ChessPiece* ChessBoard::GetPieceFromType(PieceType type) {
 
 	case PieceType::Pawn:
 		return &pawn;
+
+	default:
+		return nullptr;
 	}
 }
 
@@ -137,6 +144,26 @@ void ChessBoard::End() {
 	SDL_DestroyTexture(piecesTexture);
 }
 
+void ChessBoard::DrawPiece(ChessCell cell, SDL_Rect* rect) {
+	SDL_Renderer* renderer = engine->renderer;
+	ChessPiece* piece = GetPieceFromType(cell.type);
+
+	if (piece == nullptr) {
+		return;
+	}
+
+	glm::ivec2 framePos = {
+		piece->GetFrameIndex() * piecesTextureCellSize.x,
+		(cell.color == PieceColor::Black) ? piecesTextureCellSize.y : 0
+	};
+
+	SDL_Rect frameRect = {
+		framePos.x, framePos.y,
+		piecesTextureCellSize.x, piecesTextureCellSize.y };
+
+	SDL_RenderCopy(renderer, piecesTexture, &frameRect, rect);
+}
+
 void ChessBoard::RenderBoard() {
 	SDL_Renderer* renderer = engine->renderer;
 
@@ -173,16 +200,7 @@ void ChessBoard::RenderPieces() {
 				continue;
 			}
 
-			glm::ivec2 framePos = {
-				piece->GetFrameIndex() * piecesTextureCellSize.x,
-				(cell.color == PieceColor::Black) ? piecesTextureCellSize.y : 0
-			};
-
-			SDL_Rect frameRect = {
-				framePos.x, framePos.y,
-				piecesTextureCellSize.x, piecesTextureCellSize.y };
-
-			SDL_RenderCopy(renderer, piecesTexture, &frameRect, &cellRect);
+			DrawPiece(cell, &cellRect);
 		}
 	}
 }

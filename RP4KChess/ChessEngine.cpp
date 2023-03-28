@@ -11,6 +11,27 @@ void ChessEngine::SetDrawColor(glm::ivec4 color) {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 
+void ChessEngine::TrySelecting(glm::ivec2 pos) {
+	ChessCell cell = board.GetCell(pos);
+	ChessPiece* piece = board.GetPieceFromType(cell.type);
+
+	if (piece != nullptr) {
+		if (cell.color != turnColor) {
+			return;
+		}
+
+		std::vector<glm::ivec2> possibleMoves;
+		piece->GetPossibleMoves(pos, board, possibleMoves);
+
+		if (possibleMoves.empty()) {
+			return;
+		}
+
+		selectedPos = pos;
+		isCellSelected = true;
+	}
+}
+
 void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 	ChessCell selectedCell = board.GetCell(selectedPos);
 	ChessPiece* selectedPiece = board.GetPieceFromType(selectedCell.type);
@@ -23,18 +44,20 @@ void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 	selectedPiece->GetPossibleMoves(selectedPos, board, possibleMoves);
 
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), pos) != possibleMoves.end()) {
-		board.MoveCell(selectedPos, pos);
+		MoveCell(selectedPos, pos);
 	}
 
 	isCellSelected = false;
 }
 
-void ChessEngine::TrySelecting(glm::ivec2 pos) {
-	ChessCell cell = board.GetCell(pos);
+void ChessEngine::MoveCell(glm::ivec2 from, glm::ivec2 to) {
+	board.MoveCell(from, to);
 
-	if (cell.type != PieceType::None) {
-		selectedPos = pos;
-		isCellSelected = true;
+	if (turnColor == PieceColor::Black) {
+		turnColor = PieceColor::White;
+	}
+	else {
+		turnColor = PieceColor::Black;
 	}
 }
 
@@ -58,24 +81,30 @@ void ChessEngine::Start() {
 		"Chess",
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		640, 480,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		NULL);
 	
-	renderer = SDL_CreateRenderer(window, 0, NULL);
+	renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	board.Start(this);
 	board.LoadStartingPosition();
 
-	board.SetCell({ 4, 4 }, { PieceType::Queen, PieceColor::White });
-	board.SetCell({ 3, 4 }, { PieceType::Rook, PieceColor::Black });
-	board.SetCell({ 2, 4 }, { PieceType::Bishop, PieceColor::White });
-
 	Render();
 
+	Uint32 lastTime = SDL_GetTicks();
+
 	while (true) {
-		if (!Update()) {
+		Uint32 currentTime = SDL_GetTicks();
+		Uint32 deltaMs = currentTime - lastTime;
+
+		float delta = (float)deltaMs / 1000.0f;
+
+		if (!Update(delta)) {
 			break;
 		}
+
+		SDL_Delay(std::max((1000 / 60) - (int)(SDL_GetTicks() - currentTime), 0));
+		lastTime = currentTime;
 	}
 
 	End();
@@ -88,7 +117,7 @@ void ChessEngine::End() {
 	SDL_DestroyWindow(window);
 }
 
-bool ChessEngine::Update() {
+bool ChessEngine::Update(float delta) {
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event)) {
@@ -116,6 +145,9 @@ void ChessEngine::Render() {
 
 	board.RenderBoard();
 
+	glm::ivec2 boardPos = board.GetBoardPos();
+	glm::ivec2 boardSize = board.GetBoardSize();
+
 	if (isCellSelected) {
 		ChessPiece* piece = board.GetPieceFromType(board.GetCell(selectedPos).type);
 
@@ -126,7 +158,7 @@ void ChessEngine::Render() {
 			SetDrawColor(moveColor);
 
 			for (glm::ivec2 pos : possibleMoves) {
-				SDL_Rect cellRect = board.GetCellRect(pos, board.GetBoardPos());
+				SDL_Rect cellRect = board.GetCellRect(pos, boardPos);
 
 				SDL_RenderFillRect(renderer, &cellRect);
 			}
@@ -134,6 +166,15 @@ void ChessEngine::Render() {
 	}
 
 	board.RenderPieces();
+	
+	glm::ivec2 turnRectSize = board.cellSize * 2;
+
+	SDL_Rect turnRect = {
+		boardPos.x + boardSize.x,
+		boardPos.y + boardSize.y - turnRectSize.y,
+		turnRectSize.x, turnRectSize.y };
+	
+	board.DrawPiece({ PieceType::King, turnColor }, &turnRect);
 
 	SDL_RenderPresent(renderer);
 }

@@ -16,16 +16,20 @@ public:
 	bool isCellSelected = false;
 	glm::ivec2 selectedPos{};
 
+	PieceColor turnColor = PieceColor::White;
+
 	glm::ivec2 GetWindowSize();
 	void SetDrawColor(glm::ivec4 color);
 
-	void TryMovingTo(glm::ivec2 pos);
 	void TrySelecting(glm::ivec2 pos);
+	void TryMovingTo(glm::ivec2 pos);
+
+	void MoveCell(glm::ivec2 from, glm::ivec2 to);
 
 	void MouseClicked(glm::ivec2 pos);
 
 	void Start();
 	void End();
-	bool Update();
+	bool Update(float delta);
 	void Render();
 };

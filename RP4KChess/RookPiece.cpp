@@ -1,5 +1,5 @@
 #include "RookPiece.h"
-#include "BoardWalker.h"
+#include "MoveBuilder.h"
 
 void BishopPiece::GetPossibleMoves(
 	glm::ivec2 pos,
@@ -10,5 +10,5 @@ void BishopPiece::GetPossibleMoves(
 		{ -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }
 	};
 
-	BoardWalker::GetPossibleMoves(pos, dirs, board, result);
+	MoveBuilder::WalkBoard(pos, dirs, board, result);
 }

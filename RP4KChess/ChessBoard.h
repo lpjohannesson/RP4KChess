@@ -54,6 +54,7 @@ public:
 
 	ChessBoard(glm::ivec2 size);
 
+	glm::ivec2 GetSize();
 	void SetSize(glm::ivec2 size);
 
 	glm::ivec2 GetBoardPos();
@@ -75,6 +76,8 @@ public:
 	
 	void Start(ChessEngine* engine);
 	void End();
+
+	void DrawPiece(ChessCell cell, SDL_Rect* rect);
 
 	void RenderBoard();
 	void RenderPieces();
