@@ -4,7 +4,7 @@
 class BishopPiece : public ChessPiece {
 private:
 	std::vector<glm::ivec2> dirs = {
-		{ 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 },
+		{ 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 }
 	};
 
 public:
