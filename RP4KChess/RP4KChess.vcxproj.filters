@@ -33,7 +33,7 @@
     <ClCompile Include="MoveBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BishopPiece.cpp">
+    <ClCompile Include="RookPiece.cpp">
       <Filter>Source Files\pieces</Filter>
     </ClCompile>
     <ClCompile Include="KingPiece.cpp">
@@ -45,7 +45,7 @@
     <ClCompile Include="QueenPiece.cpp">
       <Filter>Source Files\pieces</Filter>
     </ClCompile>
-    <ClCompile Include="RookPiece.cpp">
+    <ClCompile Include="BishopPiece.cpp">
       <Filter>Source Files\pieces</Filter>
     </ClCompile>
     <ClCompile Include="PawnPiece.cpp">

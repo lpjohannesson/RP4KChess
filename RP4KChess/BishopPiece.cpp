@@ -1,7 +1,7 @@
-#include "RookPiece.h"
+#include "BishopPiece.h"
 #include "MoveBuilder.h"
 
-void RookPiece::GetPossibleMoves(
+void BishopPiece::GetPossibleMoves(
 	glm::ivec2 pos,
 	ChessBoard& board,
 	std::vector<glm::ivec2>& result)

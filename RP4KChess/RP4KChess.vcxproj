@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BishopPiece.cpp" />
+    <ClCompile Include="RookPiece.cpp" />
     <ClCompile Include="KingPiece.cpp" />
     <ClCompile Include="KnightPiece.cpp" />
     <ClCompile Include="MoveBuilder.cpp" />
@@ -136,7 +136,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PawnPiece.cpp" />
     <ClCompile Include="QueenPiece.cpp" />
-    <ClCompile Include="RookPiece.cpp" />
+    <ClCompile Include="BishopPiece.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BishopPiece.h" />

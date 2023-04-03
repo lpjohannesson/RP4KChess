@@ -1,14 +1,10 @@
 #include "RookPiece.h"
 #include "MoveBuilder.h"
 
-void BishopPiece::GetPossibleMoves(
+void RookPiece::GetPossibleMoves(
 	glm::ivec2 pos,
 	ChessBoard& board,
 	std::vector<glm::ivec2>& result)
 {
-	std::vector<glm::ivec2> dirs = {
-		{ -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }
-	};
-
 	MoveBuilder::WalkBoard(dirs, pos, board, result);
 }
