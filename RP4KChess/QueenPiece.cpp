@@ -6,5 +6,5 @@ void QueenPiece::GetPossibleMoves(
 	ChessBoard& board,
 	std::vector<glm::ivec2>& result)
 {
-	MoveBuilder::WalkBoard(pos, dirs, board, result);
+	MoveBuilder::WalkBoard(dirs, pos, board, result);
 }

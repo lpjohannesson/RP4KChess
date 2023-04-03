@@ -11,14 +11,14 @@ public:
 class MoveBuilder {
 public:
 	static void TestPoints(
-		glm::ivec2 pos,
 		std::vector<glm::ivec2>& points,
+		glm::ivec2 pos,
 		ChessBoard& board,
 		std::vector<glm::ivec2>& result);
 
 	static void WalkBoard(
-		glm::ivec2 pos,
 		std::vector<glm::ivec2>& dirs,
+		glm::ivec2 pos,
 		ChessBoard& board,
 		std::vector<glm::ivec2>& result);
 };

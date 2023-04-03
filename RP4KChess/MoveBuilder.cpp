@@ -2,8 +2,8 @@
 #include <queue>
 
 void MoveBuilder::TestPoints(
-	glm::ivec2 pos,
 	std::vector<glm::ivec2>& points,
+	glm::ivec2 pos,
 	ChessBoard& board,
 	std::vector<glm::ivec2>& result)
 {
@@ -25,8 +25,8 @@ void MoveBuilder::TestPoints(
 }
 
 void MoveBuilder::WalkBoard(
-	glm::ivec2 pos,
 	std::vector<glm::ivec2>& dirs,
+	glm::ivec2 pos,
 	ChessBoard& board,
 	std::vector<glm::ivec2>& result)
 {

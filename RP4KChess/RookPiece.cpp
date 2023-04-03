@@ -10,5 +10,5 @@ void BishopPiece::GetPossibleMoves(
 		{ -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }
 	};
 
-	MoveBuilder::WalkBoard(pos, dirs, board, result);
+	MoveBuilder::WalkBoard(dirs, pos, board, result);
 }

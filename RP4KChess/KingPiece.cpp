@@ -12,5 +12,5 @@ void KingPiece::GetPossibleMoves(
 		points.push_back(pos + dir);
 	}
 
-	MoveBuilder::TestPoints(pos, points, board, result);
+	MoveBuilder::TestPoints(points, pos, board, result);
 }

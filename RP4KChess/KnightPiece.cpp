@@ -20,5 +20,5 @@ void KnightPiece::GetPossibleMoves(
 		normal = tangent;
 	}
 
-	MoveBuilder::TestPoints(pos, points, board, result);
+	MoveBuilder::TestPoints(points, pos, board, result);
 }
