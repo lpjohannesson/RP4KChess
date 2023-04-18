@@ -1,5 +1,4 @@
 #include "MoveBuilder.h"
-#include <queue>
 
 void MoveBuilder::TestPoints(
 	std::vector<glm::ivec2>& points,
@@ -32,33 +31,27 @@ void MoveBuilder::WalkBoard(
 {
 	PieceColor color = board.GetCell(pos).color;
 
-	std::queue<BoardWalker> walkers;
-
 	for (glm::ivec2 dir : dirs) {
-		walkers.push({ pos, dir });
-	}
+		glm::ivec2 nextResult = pos;
 
-	while (!walkers.empty()) {
-		BoardWalker& walker = walkers.front();
+		while (true) {
+			nextResult += dir;
 
-		walker.pos += walker.dir;
-
-		if (!board.CellInRange(walker.pos)) {
-			walkers.pop();
-			continue;
-		}
-
-		ChessCell cell = board.GetCell(walker.pos);
-
-		if (cell.type != PieceType::None) {
-			if (cell.color != color) {
-				result.push_back(walker.pos);
+			if (!board.CellInRange(nextResult)) {
+				break;
 			}
 
-			walkers.pop();
-			continue;
-		}
+			ChessCell cell = board.GetCell(nextResult);
 
-		result.push_back(walker.pos);
+			if (cell.type != PieceType::None) {
+				if (cell.color != color) {
+					result.push_back(nextResult);
+				}
+
+				break;
+			}
+
+			result.push_back(nextResult);
+		}
 	}
 }
