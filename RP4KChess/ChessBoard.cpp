@@ -46,7 +46,7 @@ SDL_Rect ChessBoard::GetBoardRect(glm::ivec2 boardPos) {
 }
 
 SDL_Rect ChessBoard::GetCellRect(glm::ivec2 pos, glm::ivec2 boardPos) {
-	glm::ivec2 cellPos = boardPos + glm::ivec2(pos.x, pos.y) * cellSize;
+	glm::ivec2 cellPos = boardPos + pos * cellSize;
 	return { cellPos.x, cellPos.y, cellSize.x, cellSize.y };
 }
 

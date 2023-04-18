@@ -41,8 +41,7 @@ private:
 	PawnPiece pawn;
 
 	SDL_Texture* piecesTexture;
-	glm::ivec2 piecesTextureSize;
-	glm::ivec2 piecesTextureCellSize;
+	glm::ivec2 piecesTextureSize, piecesTextureCellSize;
 
 	ChessEngine* engine;
 
