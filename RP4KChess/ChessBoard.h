@@ -45,6 +45,8 @@ private:
 
 	ChessEngine* engine;
 
+	PieceColor turnColor = PieceColor::White;
+
 	int GetCellIndex(glm::ivec2 pos);
 
 public:
@@ -55,6 +57,8 @@ public:
 
 	glm::ivec2 GetSize();
 	void SetSize(glm::ivec2 size);
+
+	PieceColor GetTurnColor();
 
 	glm::ivec2 GetBoardPos();
 	glm::ivec2 GetBoardSize();

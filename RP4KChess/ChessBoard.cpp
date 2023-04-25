@@ -29,6 +29,11 @@ void ChessBoard::SetSize(glm::ivec2 size) {
 	}
 }
 
+PieceColor ChessBoard::GetTurnColor()
+{
+	return turnColor;
+}
+
 glm::ivec2 ChessBoard::GetBoardPos() {
 	glm::ivec2 boardSize = GetBoardSize();
 	glm::ivec2 windowSize = engine->GetWindowSize();
@@ -71,6 +76,13 @@ void ChessBoard::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 	
 	SetCell(from, { PieceType::None });
 	SetCell(to, cell);
+
+	if (turnColor == PieceColor::Black) {
+		turnColor = PieceColor::White;
+	}
+	else {
+		turnColor = PieceColor::Black;
+	}
 }
 
 bool ChessBoard::CellInRange(glm::ivec2 pos) {
@@ -191,9 +203,10 @@ void ChessBoard::RenderPieces() {
 
 	for (int y = 0; y < size.y; y++) {
 		for (int x = 0; x < size.x; x++) {
-			SDL_Rect cellRect = GetCellRect({ x, y }, boardPos);
+			glm::ivec2 cellPos = { x, y };
+			SDL_Rect cellRect = GetCellRect(cellPos, boardPos);
 
-			ChessCell cell = GetCell({ x, y });
+			ChessCell cell = GetCell(cellPos);
 			ChessPiece* piece = GetPieceFromType(cell.type);
 
 			if (piece == nullptr) {

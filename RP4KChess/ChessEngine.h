@@ -16,8 +16,6 @@ public:
 	bool isCellSelected = false;
 	glm::ivec2 selectedPos{};
 
-	PieceColor turnColor = PieceColor::White;
-
 	glm::ivec2 GetWindowSize();
 	void SetDrawColor(glm::ivec4 color);
 

@@ -15,21 +15,23 @@ void ChessEngine::TrySelecting(glm::ivec2 pos) {
 	ChessCell cell = board.GetCell(pos);
 	ChessPiece* piece = board.GetPieceFromType(cell.type);
 
-	if (piece != nullptr) {
-		if (cell.color != turnColor) {
-			return;
-		}
-
-		std::vector<glm::ivec2> possibleMoves;
-		piece->GetPossibleMoves(pos, board, possibleMoves);
-
-		if (possibleMoves.empty()) {
-			return;
-		}
-
-		selectedPos = pos;
-		isCellSelected = true;
+	if (piece == nullptr) {
+		return;
 	}
+
+	if (cell.color != board.GetTurnColor()) {
+		return;
+	}
+
+	std::vector<glm::ivec2> possibleMoves;
+	piece->GetPossibleMoves(pos, board, possibleMoves);
+
+	if (possibleMoves.empty()) {
+		return;
+	}
+
+	selectedPos = pos;
+	isCellSelected = true;
 }
 
 void ChessEngine::TryMovingTo(glm::ivec2 pos) {
@@ -52,23 +54,16 @@ void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 
 void ChessEngine::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 	board.MoveCell(from, to);
-
-	if (turnColor == PieceColor::Black) {
-		turnColor = PieceColor::White;
-	}
-	else {
-		turnColor = PieceColor::Black;
-	}
 }
 
 void ChessEngine::MouseClicked(glm::ivec2 pos) {
-	glm::ivec2 boardPos = (pos - board.GetBoardPos()) / board.cellSize;
+	glm::ivec2 cellPos = (pos - board.GetBoardPos()) / board.cellSize;
 
 	if (isCellSelected) {
-		TryMovingTo(boardPos);
+		TryMovingTo(cellPos);
 	}
 	else {
-		TrySelecting(boardPos);
+		TrySelecting(cellPos);
 	}
 
 	Render();
@@ -174,7 +169,7 @@ void ChessEngine::Render() {
 		boardPos.y + boardSize.y - turnRectSize.y,
 		turnRectSize.x, turnRectSize.y };
 	
-	board.DrawPiece({ PieceType::King, turnColor }, &turnRect);
+	board.DrawPiece({ PieceType::King, board.GetTurnColor() }, &turnRect);
 
 	SDL_RenderPresent(renderer);
 }
