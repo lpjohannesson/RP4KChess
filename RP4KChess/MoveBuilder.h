@@ -3,11 +3,6 @@
 #include <glm/glm.hpp>
 #include "ChessBoard.h"
 
-class BoardWalker {
-public:
-	glm::ivec2 pos, dir;
-};
-
 class MoveBuilder {
 public:
 	static void TestPoints(
