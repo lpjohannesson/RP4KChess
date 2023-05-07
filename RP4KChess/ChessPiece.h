@@ -12,4 +12,9 @@ public:
 		glm::ivec2 pos,
 		ChessBoard& board,
 		std::vector<glm::ivec2>& result) { }
+
+	void GetMovesNotInCheck(
+		glm::ivec2 pos,
+		ChessBoard& board,
+		std::vector<glm::ivec2>& result);
 };

@@ -13,9 +13,8 @@ void ChessEngine::SetDrawColor(glm::ivec4 color) {
 
 void ChessEngine::TrySelecting(glm::ivec2 pos) {
 	ChessCell cell = board.GetCell(pos);
-	ChessPiece* piece = board.GetPieceFromType(cell.type);
 
-	if (piece == nullptr) {
+	if (cell.type == PieceType::None) {
 		return;
 	}
 
@@ -23,8 +22,10 @@ void ChessEngine::TrySelecting(glm::ivec2 pos) {
 		return;
 	}
 
+	ChessPiece* piece = board.GetPieceFromType(cell.type);
+
 	std::vector<glm::ivec2> possibleMoves;
-	piece->GetPossibleMoves(pos, board, possibleMoves);
+	piece->GetMovesNotInCheck(pos, board, possibleMoves);
 
 	if (possibleMoves.empty()) {
 		return;
@@ -43,7 +44,7 @@ void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 	}
 
 	std::vector<glm::ivec2> possibleMoves;
-	selectedPiece->GetPossibleMoves(selectedPos, board, possibleMoves);
+	selectedPiece->GetMovesNotInCheck(selectedPos, board, possibleMoves);
 
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), pos) != possibleMoves.end()) {
 		MoveCell(selectedPos, pos);
@@ -144,11 +145,13 @@ void ChessEngine::Render() {
 	glm::ivec2 boardSize = board.GetBoardSize();
 
 	if (isCellSelected) {
-		ChessPiece* piece = board.GetPieceFromType(board.GetCell(selectedPos).type);
+		PieceType pieceType = board.GetCell(selectedPos).type;
 
-		if (piece != nullptr) {
+		if (pieceType != PieceType::None) {
+			ChessPiece* piece = board.GetPieceFromType(pieceType);
+
 			std::vector<glm::ivec2> possibleMoves;
-			piece->GetPossibleMoves(selectedPos, board, possibleMoves);
+			piece->GetMovesNotInCheck(selectedPos, board, possibleMoves);
 
 			SetDrawColor(moveColor);
 

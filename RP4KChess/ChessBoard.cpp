@@ -8,6 +8,20 @@ int ChessBoard::GetCellIndex(glm::ivec2 pos) {
 	return pos.y * size.x + pos.x;
 }
 
+void ChessBoard::ScanForInCheck() {
+	glm::ivec2
+		blackKingPos = FindCell({ PieceType::King, PieceColor::Black }),
+		whiteKingPos = FindCell({ PieceType::King, PieceColor::White });
+
+	if (InCheck(blackKingPos)) {
+		std::cout << "black check" << std::endl;
+	}
+
+	if (InCheck(whiteKingPos)) {
+		std::cout << "white check" << std::endl;
+	}
+}
+
 ChessBoard::ChessBoard(glm::ivec2 size) {
 	SetSize(size);
 }
@@ -71,6 +85,22 @@ void ChessBoard::SetCell(glm::ivec2 pos, ChessCell cell) {
 	cells[GetCellIndex(pos)] = cell;
 }
 
+glm::ivec2 ChessBoard::FindCell(ChessCell cell)
+{
+	for (int y = 0; y < size.y; y++) {
+		for (int x = 0; x < size.x; x++) {
+			glm::ivec2 pos = { x, y };
+			ChessCell foundCell = GetCell(pos);
+
+			if (foundCell.type == cell.type && foundCell.color == cell.color) {
+				return pos;
+			}
+		}
+	}
+
+	return { -1, -1 };
+}
+
 void ChessBoard::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 	ChessCell cell = GetCell(from);
 	
@@ -83,6 +113,8 @@ void ChessBoard::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 	else {
 		turnColor = PieceColor::Black;
 	}
+
+	ScanForInCheck();
 }
 
 bool ChessBoard::CellInRange(glm::ivec2 pos) {
@@ -117,6 +149,38 @@ ChessPiece* ChessBoard::GetPieceFromType(PieceType type) {
 	default:
 		return nullptr;
 	}
+}
+
+bool ChessBoard::InCheck(glm::ivec2 kingPos)
+{
+	glm::ivec2 boardSize = GetSize();
+	ChessCell kingCell = GetCell(kingPos);
+
+	for (int y = 0; y < boardSize.y; y++) {
+		for (int x = 0; x < boardSize.x; x++) {
+			glm::ivec2 cellPos = { x, y };
+			ChessCell cell = GetCell(cellPos);
+
+			if (cell.type == PieceType::None || cell.type == PieceType::King) {
+				continue;
+			}
+
+			if (cell.color == kingCell.color) {
+				continue;
+			}
+
+			ChessPiece* piece = GetPieceFromType(cell.type);
+
+			std::vector<glm::ivec2> piecePossibleMoves;
+			piece->GetPossibleMoves(cellPos, *this, piecePossibleMoves);
+
+			if (std::find(piecePossibleMoves.begin(), piecePossibleMoves.end(), kingPos) != piecePossibleMoves.end()) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 void ChessBoard::LoadStartingPosition() {
@@ -157,12 +221,12 @@ void ChessBoard::End() {
 }
 
 void ChessBoard::DrawPiece(ChessCell cell, SDL_Rect* rect) {
-	SDL_Renderer* renderer = engine->renderer;
-	ChessPiece* piece = GetPieceFromType(cell.type);
-
-	if (piece == nullptr) {
+	if (cell.type == PieceType::None) {
 		return;
 	}
+
+	SDL_Renderer* renderer = engine->renderer;
+	ChessPiece* piece = GetPieceFromType(cell.type);
 
 	glm::ivec2 framePos = {
 		piece->GetFrameIndex() * piecesTextureCellSize.x,
@@ -207,9 +271,8 @@ void ChessBoard::RenderPieces() {
 			SDL_Rect cellRect = GetCellRect(cellPos, boardPos);
 
 			ChessCell cell = GetCell(cellPos);
-			ChessPiece* piece = GetPieceFromType(cell.type);
 
-			if (piece == nullptr) {
+			if (cell.type == PieceType::None) {
 				continue;
 			}
 
