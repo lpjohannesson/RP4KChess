@@ -3,11 +3,10 @@
 
 void ChessPiece::GetMovesNotInCheck(glm::ivec2 pos, ChessBoard& board, std::vector<glm::ivec2>& result)
 {
-	ChessCell cell = board.GetCell(pos);
-
 	std::vector<glm::ivec2> possibleMoves;
 	GetPossibleMoves(pos, board, possibleMoves);
 
+	ChessCell cell = board.GetCell(pos);
 	board.SetCell(pos, { PieceType::None });
 
 	glm::ivec2 kingPos = board.FindCell({ PieceType::King, cell.color });

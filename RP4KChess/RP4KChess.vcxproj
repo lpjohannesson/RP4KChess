@@ -138,6 +138,7 @@
     <ClCompile Include="PawnPiece.cpp" />
     <ClCompile Include="QueenPiece.cpp" />
     <ClCompile Include="BishopPiece.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BishopPiece.h" />
@@ -150,9 +151,13 @@
     <ClInclude Include="PawnPiece.h" />
     <ClInclude Include="QueenPiece.h" />
     <ClInclude Include="RookPiece.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\pieces.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\font.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

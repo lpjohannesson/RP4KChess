@@ -12,6 +12,8 @@
 #include "RookPiece.h"
 #include "PawnPiece.h"
 
+#include "Texture.h"
+
 class ChessEngine;
 
 enum class PieceType {
@@ -40,8 +42,8 @@ private:
 	RookPiece rook;
 	PawnPiece pawn;
 
-	SDL_Texture* piecesTexture;
-	glm::ivec2 piecesTextureSize, piecesTextureCellSize;
+	Texture piecesTexture;
+	glm::ivec2 piecesTextureCellSize;
 
 	ChessEngine* engine;
 

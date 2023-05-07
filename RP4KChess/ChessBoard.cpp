@@ -1,5 +1,4 @@
 #include "ChessBoard.h"
-#include <iostream>
 #include <sstream>
 #include "ChessEngine.h"
 #include <SDL2/SDL_image.h>
@@ -14,19 +13,25 @@ void ChessBoard::ScanForInCheck() {
 		whiteKingPos = FindCell({ PieceType::King, PieceColor::White });
 
 	if (InCheck(blackKingPos)) {
-		std::cout << "black check" << std::endl;
-
 		if (InCheckmate(blackKingPos)) {
-			std::cout << "black checkmate" << std::endl;
+			engine->OnEnteredCheckmate(PieceColor::Black);
 		}
+		else {
+			engine->OnEnteredCheck(PieceColor::Black);
+		}
+
+		return;
 	}
 
 	if (InCheck(whiteKingPos)) {
-		std::cout << "white check" << std::endl;
-
 		if (InCheckmate(whiteKingPos)) {
-			std::cout << "white checkmate" << std::endl;
+			engine->OnEnteredCheckmate(PieceColor::White);
 		}
+		else {
+			engine->OnEnteredCheck(PieceColor::White);
+		}
+
+		return;
 	}
 }
 
@@ -208,10 +213,10 @@ bool ChessBoard::InCheckmate(glm::ivec2 kingPos) {
 
 			ChessPiece* piece = GetPieceFromType(cell.type);
 
-			std::vector<glm::ivec2> movesNotInCheck;
-			piece->GetMovesNotInCheck(cellPos, *this, movesNotInCheck);
+			std::vector<glm::ivec2> possibleMoves;
+			piece->GetMovesNotInCheck(cellPos, *this, possibleMoves);
 
-			if (!movesNotInCheck.empty()) {
+			if (!possibleMoves.empty()) {
 				return false;
 			}
 		}
@@ -241,21 +246,13 @@ void ChessBoard::Start(ChessEngine* engine) {
 	this->engine = engine;
 
 	SDL_Surface* piecesSurface = IMG_Load("assets/pieces.png");
+	piecesTexture.Start(engine->renderer, piecesSurface);
 
-	if (piecesSurface == NULL) {
-		std::cerr << "Could not load pieces texture." << std::endl;
-	}
-	else {
-		piecesTextureSize = { piecesSurface->w, piecesSurface->h };
-		piecesTextureCellSize = piecesTextureSize / glm::ivec2(6, 2);
-	}
-
-	piecesTexture = SDL_CreateTextureFromSurface(engine->renderer, piecesSurface);
-	SDL_FreeSurface(piecesSurface);
+	piecesTextureCellSize = piecesTexture.size / glm::ivec2(6, 2);
 }
 
 void ChessBoard::End() {
-	SDL_DestroyTexture(piecesTexture);
+	piecesTexture.End();
 }
 
 void ChessBoard::DrawPiece(ChessCell cell, SDL_Rect* rect) {
@@ -275,7 +272,7 @@ void ChessBoard::DrawPiece(ChessCell cell, SDL_Rect* rect) {
 		framePos.x, framePos.y,
 		piecesTextureCellSize.x, piecesTextureCellSize.y };
 
-	SDL_RenderCopy(renderer, piecesTexture, &frameRect, rect);
+	SDL_RenderCopy(renderer, piecesTexture.texture, &frameRect, rect);
 }
 
 void ChessBoard::RenderBoard() {

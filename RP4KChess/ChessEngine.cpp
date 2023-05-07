@@ -7,6 +7,13 @@ glm::ivec2 ChessEngine::GetWindowSize() {
 	return windowSize;
 }
 
+void ChessEngine::CreateTextTexture(Texture& texture, const char* text, glm::ivec4 color) {
+	SDL_Color sdlColor = { color.r, color.g, color.b, color.a };
+
+	texture.Start(
+		renderer, TTF_RenderText_Blended(font, text, sdlColor));
+}
+
 void ChessEngine::SetDrawColor(glm::ivec4 color) {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
@@ -54,6 +61,8 @@ void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 }
 
 void ChessEngine::MoveCell(glm::ivec2 from, glm::ivec2 to) {
+	currentTextTexture = nullptr;
+
 	board.MoveCell(from, to);
 }
 
@@ -70,6 +79,14 @@ void ChessEngine::MouseClicked(glm::ivec2 pos) {
 	Render();
 }
 
+void ChessEngine::OnEnteredCheck(PieceColor color) {
+	currentTextTexture = color == PieceColor::Black ? &blackCheckTexture : &whiteCheckTexture;
+}
+
+void ChessEngine::OnEnteredCheckmate(PieceColor color) {
+	currentTextTexture = color == PieceColor::Black ? &whiteCheckmateTexture : &blackCheckmateTexture;
+}
+
 void ChessEngine::Start() {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -80,7 +97,25 @@ void ChessEngine::Start() {
 		NULL);
 	
 	renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+	TTF_Init();
+	font = TTF_OpenFont("assets/CreatoDisplay.ttf", 24);
+
+	CreateTextTexture(
+		blackCheckTexture, "Black is in check!", fontColor);
+
+	CreateTextTexture(
+		whiteCheckTexture, "White is in check!", fontColor);
+
+	CreateTextTexture(
+		blackCheckmateTexture, "Checkmate! Black wins!", fontColor);
+
+	CreateTextTexture(
+		whiteCheckmateTexture, "Checkmate! White wins!", fontColor);
+
+	const char* error = SDL_GetError();
 
 	board.Start(this);
 	board.LoadStartingPosition();
@@ -109,6 +144,13 @@ void ChessEngine::Start() {
 void ChessEngine::End() {
 	board.End();
 
+	TTF_CloseFont(font);
+
+	blackCheckTexture.End();
+	whiteCheckTexture.End();
+	blackCheckmateTexture.End();
+	whiteCheckmateTexture.End();
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 }
@@ -133,6 +175,18 @@ bool ChessEngine::Update(float delta) {
 	}
 
 	return true;
+}
+
+void ChessEngine::RenderText(Texture& texture) {
+	glm::ivec2
+		boardPos = board.GetBoardPos(),
+		boardSize = board.GetBoardSize();
+
+	SDL_Rect rect = {
+		boardPos.x + (boardSize.x / 2) - (texture.size.x / 2),
+		boardPos.y - texture.size.y - 8,
+		texture.size.x, texture.size.y };
+	SDL_RenderCopy(renderer, texture.texture, NULL, &rect);
 }
 
 void ChessEngine::Render() {
@@ -173,6 +227,10 @@ void ChessEngine::Render() {
 		turnRectSize.x, turnRectSize.y };
 	
 	board.DrawPiece({ PieceType::King, board.GetTurnColor() }, &turnRect);
+
+	if (currentTextTexture != nullptr) {
+		RenderText(*currentTextTexture);
+	}
 
 	SDL_RenderPresent(renderer);
 }
