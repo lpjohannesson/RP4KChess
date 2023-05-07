@@ -80,6 +80,7 @@ public:
 	ChessPiece* GetPieceFromType(PieceType type);
 
 	bool InCheck(glm::ivec2 kingPos);
+	bool InCheckmate(glm::ivec2 kingPos);
 
 	void LoadStartingPosition();
 	

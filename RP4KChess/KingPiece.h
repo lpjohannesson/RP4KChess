@@ -15,4 +15,9 @@ public:
 		glm::ivec2 pos,
 		ChessBoard& board,
 		std::vector<glm::ivec2>& result) override;
+
+	void GetMovesNotInCheck(
+		glm::ivec2 pos,
+		ChessBoard& board,
+		std::vector<glm::ivec2>& result) override;
 };

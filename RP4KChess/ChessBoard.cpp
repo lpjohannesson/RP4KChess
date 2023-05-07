@@ -15,10 +15,18 @@ void ChessBoard::ScanForInCheck() {
 
 	if (InCheck(blackKingPos)) {
 		std::cout << "black check" << std::endl;
+
+		if (InCheckmate(blackKingPos)) {
+			std::cout << "black checkmate" << std::endl;
+		}
 	}
 
 	if (InCheck(whiteKingPos)) {
 		std::cout << "white check" << std::endl;
+
+		if (InCheckmate(whiteKingPos)) {
+			std::cout << "white checkmate" << std::endl;
+		}
 	}
 }
 
@@ -153,11 +161,10 @@ ChessPiece* ChessBoard::GetPieceFromType(PieceType type) {
 
 bool ChessBoard::InCheck(glm::ivec2 kingPos)
 {
-	glm::ivec2 boardSize = GetSize();
 	ChessCell kingCell = GetCell(kingPos);
 
-	for (int y = 0; y < boardSize.y; y++) {
-		for (int x = 0; x < boardSize.x; x++) {
+	for (int y = 0; y < size.y; y++) {
+		for (int x = 0; x < size.x; x++) {
 			glm::ivec2 cellPos = { x, y };
 			ChessCell cell = GetCell(cellPos);
 
@@ -183,10 +190,41 @@ bool ChessBoard::InCheck(glm::ivec2 kingPos)
 	return false;
 }
 
+bool ChessBoard::InCheckmate(glm::ivec2 kingPos) {
+	ChessCell kingCell = GetCell(kingPos);
+
+	for (int y = 0; y < size.y; y++) {
+		for (int x = 0; x < size.x; x++) {
+			glm::ivec2 cellPos = { x, y };
+			ChessCell cell = GetCell(cellPos);
+
+			if (cell.type == PieceType::None) {
+				continue;
+			}
+
+			if (cell.color != kingCell.color) {
+				continue;
+			}
+
+			ChessPiece* piece = GetPieceFromType(cell.type);
+
+			std::vector<glm::ivec2> movesNotInCheck;
+			piece->GetMovesNotInCheck(cellPos, *this, movesNotInCheck);
+
+			if (!movesNotInCheck.empty()) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 void ChessBoard::LoadStartingPosition() {
 	constexpr PieceType endTypes[] = {
 		PieceType::Rook, PieceType::Knight, PieceType::Bishop, PieceType::Queen,
-		PieceType::King, PieceType::Bishop, PieceType::Knight, PieceType::Rook };
+		PieceType::King, PieceType::Bishop, PieceType::Knight, PieceType::Rook
+	};
 		
 	for (int x = 0; x < 8; x++) {
 		PieceType endType = endTypes[x];
