@@ -14,10 +14,10 @@ void ChessBoard::ScanForInCheck() {
 
 	if (InCheck(blackKingPos)) {
 		if (InCheckmate(blackKingPos)) {
-			engine->OnEnteredCheckmate(PieceColor::Black);
+			engine->EnteredCheckmate(PieceColor::Black);
 		}
 		else {
-			engine->OnEnteredCheck(PieceColor::Black);
+			engine->EnteredCheck(PieceColor::Black);
 		}
 
 		return;
@@ -25,10 +25,10 @@ void ChessBoard::ScanForInCheck() {
 
 	if (InCheck(whiteKingPos)) {
 		if (InCheckmate(whiteKingPos)) {
-			engine->OnEnteredCheckmate(PieceColor::White);
+			engine->EnteredCheckmate(PieceColor::White);
 		}
 		else {
-			engine->OnEnteredCheck(PieceColor::White);
+			engine->EnteredCheck(PieceColor::White);
 		}
 
 		return;
@@ -119,6 +119,12 @@ void ChessBoard::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 	
 	SetCell(from, { PieceType::None });
 	SetCell(to, cell);
+
+	ChessPiece* piece = GetPieceFromType(cell.type);
+
+	if (piece != nullptr) {
+		piece->CellMoved(from, to, *this);
+	}
 
 	if (turnColor == PieceColor::Black) {
 		turnColor = PieceColor::White;

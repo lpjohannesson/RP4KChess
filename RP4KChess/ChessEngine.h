@@ -41,8 +41,8 @@ public:
 
 	void MouseClicked(glm::ivec2 pos);
 
-	void OnEnteredCheck(PieceColor color);
-	void OnEnteredCheckmate(PieceColor color);
+	void EnteredCheck(PieceColor color);
+	void EnteredCheckmate(PieceColor color);
 
 	void Start();
 	void End();

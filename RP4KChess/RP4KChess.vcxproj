@@ -157,6 +157,7 @@
     <Image Include="assets\pieces.png" />
   </ItemGroup>
   <ItemGroup>
+    <Font Include="assets\CreatoDisplay.ttf" />
     <Font Include="assets\font.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

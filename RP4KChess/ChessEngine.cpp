@@ -79,11 +79,11 @@ void ChessEngine::MouseClicked(glm::ivec2 pos) {
 	Render();
 }
 
-void ChessEngine::OnEnteredCheck(PieceColor color) {
+void ChessEngine::EnteredCheck(PieceColor color) {
 	currentTextTexture = color == PieceColor::Black ? &blackCheckTexture : &whiteCheckTexture;
 }
 
-void ChessEngine::OnEnteredCheckmate(PieceColor color) {
+void ChessEngine::EnteredCheckmate(PieceColor color) {
 	currentTextTexture = color == PieceColor::Black ? &whiteCheckmateTexture : &blackCheckmateTexture;
 }
 
@@ -186,6 +186,7 @@ void ChessEngine::RenderText(Texture& texture) {
 		boardPos.x + (boardSize.x / 2) - (texture.size.x / 2),
 		boardPos.y - texture.size.y - 8,
 		texture.size.x, texture.size.y };
+
 	SDL_RenderCopy(renderer, texture.texture, NULL, &rect);
 }
 

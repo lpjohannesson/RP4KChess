@@ -9,4 +9,6 @@ public:
 		glm::ivec2 pos,
 		ChessBoard& board,
 		std::vector<glm::ivec2>& result) override;
+	
+	void CellMoved(glm::ivec2 from, glm::ivec2 to, ChessBoard& board) override;
 };

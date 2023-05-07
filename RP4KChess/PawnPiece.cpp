@@ -61,3 +61,21 @@ void PawnPiece::GetPossibleMoves(glm::ivec2 pos, ChessBoard& board, std::vector<
 
 	result.push_back(jumpTwo);
 }
+
+void PawnPiece::CellMoved(glm::ivec2 from, glm::ivec2 to, ChessBoard& board)
+{
+	ChessCell cell = board.GetCell(to);
+
+	bool becomesQueen;
+
+	if (cell.color == PieceColor::Black) {
+		becomesQueen = (to.y <= 0);
+	}
+	else {
+		becomesQueen = (to.y >= board.GetSize().y - 1);
+	}
+
+	if (becomesQueen) {
+		board.SetCell(to, { PieceType::Queen, cell.color });
+	}
+}

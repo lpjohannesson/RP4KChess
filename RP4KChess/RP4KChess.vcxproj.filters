@@ -100,5 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\font.ttf" />
+    <Font Include="assets\CreatoDisplay.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>
