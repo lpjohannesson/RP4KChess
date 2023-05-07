@@ -240,11 +240,11 @@ void ChessBoard::LoadStartingPosition() {
 	for (int x = 0; x < 8; x++) {
 		PieceType endType = endTypes[x];
 
-		SetCell({ x, 0 }, { endType, PieceColor::White });
-		SetCell({ x, 7 }, { endType, PieceColor::Black });
+		SetCell({ x, 0 }, { endType, PieceColor::Black });
+		SetCell({ x, 7 }, { endType, PieceColor::White });
 
-		SetCell({ x, 1 }, { PieceType::Pawn, PieceColor::White });
-		SetCell({ x, 6 }, { PieceType::Pawn, PieceColor::Black });
+		SetCell({ x, 1 }, { PieceType::Pawn, PieceColor::Black });
+		SetCell({ x, 6 }, { PieceType::Pawn, PieceColor::White });
 	}
 }
 

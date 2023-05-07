@@ -3,7 +3,7 @@
 
 void PawnPiece::GetPossibleMoves(glm::ivec2 pos, ChessBoard& board, std::vector<glm::ivec2>& result) {
 	PieceColor color = board.GetCell(pos).color;
-	int movementSign = (color == PieceColor::Black) ? -1 : 1;
+	int movementSign = (color == PieceColor::Black) ? 1 : -1;
 
 	std::vector<glm::ivec2> capturePoints = {
 		pos + glm::ivec2(-1, movementSign),
@@ -39,10 +39,10 @@ void PawnPiece::GetPossibleMoves(glm::ivec2 pos, ChessBoard& board, std::vector<
 	bool canJumpTwo;
 
 	if (color == PieceColor::Black) {
-		canJumpTwo = (pos.y >= board.GetSize().y - 2);
+		canJumpTwo = (pos.y <= 1);
 	}
 	else {
-		canJumpTwo = (pos.y <= 1);
+		canJumpTwo = (pos.y >= board.GetSize().y - 2);
 	}
 
 	if (!canJumpTwo) {
@@ -68,10 +68,10 @@ void PawnPiece::CellMoved(glm::ivec2 from, glm::ivec2 to, ChessBoard& board) {
 	bool becomesQueen;
 
 	if (cell.color == PieceColor::Black) {
-		becomesQueen = (to.y <= 0);
+		becomesQueen = (to.y >= board.GetSize().y - 1);
 	}
 	else {
-		becomesQueen = (to.y >= board.GetSize().y - 1);
+		becomesQueen = (to.y <= 0);
 	}
 
 	if (becomesQueen) {
