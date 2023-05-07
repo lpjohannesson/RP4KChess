@@ -99,6 +99,7 @@ void ChessEngine::Start() {
 	renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	TTF_Init();
 	font = TTF_OpenFont("assets/CreatoDisplay.ttf", 24);
