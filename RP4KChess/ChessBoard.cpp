@@ -179,7 +179,7 @@ bool ChessBoard::InCheck(glm::ivec2 kingPos)
 			glm::ivec2 cellPos = { x, y };
 			ChessCell cell = GetCell(cellPos);
 
-			if (cell.type == PieceType::None || cell.type == PieceType::King) {
+			if (cell.type == PieceType::None) {
 				continue;
 			}
 

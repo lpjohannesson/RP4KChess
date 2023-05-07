@@ -29,10 +29,6 @@ void KingPiece::GetMovesNotInCheck(
 	for (glm::ivec2 move : possibleMoves) {
 		ChessCell previousCell = board.GetCell(move);
 
-		if (previousCell.type == PieceType::King) {
-			continue;
-		}
-
 		board.SetCell(move, kingCell);
 
 		if (!board.InCheck(move)) {
