@@ -62,8 +62,7 @@ void PawnPiece::GetPossibleMoves(glm::ivec2 pos, ChessBoard& board, std::vector<
 	result.push_back(jumpTwo);
 }
 
-void PawnPiece::CellMoved(glm::ivec2 from, glm::ivec2 to, ChessBoard& board)
-{
+void PawnPiece::CellMoved(glm::ivec2 from, glm::ivec2 to, ChessBoard& board) {
 	ChessCell cell = board.GetCell(to);
 
 	bool becomesQueen;
