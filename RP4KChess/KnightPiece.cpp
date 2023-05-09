@@ -12,7 +12,7 @@ void KnightPiece::GetPossibleMoves(
 
 	for (int i = 0; i < 4; i++) {
 		glm::ivec2 basePos = pos + normal * 2;
-		glm::ivec2 tangent = glm::ivec2(-normal.y, normal.x);
+		glm::ivec2 tangent{ -normal.y, normal.x };
 
 		points.push_back(basePos + tangent);
 		points.push_back(basePos - tangent);
