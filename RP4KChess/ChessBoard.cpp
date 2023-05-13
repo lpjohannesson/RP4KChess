@@ -189,10 +189,10 @@ bool ChessBoard::InCheck(glm::ivec2 kingPos)
 
 			ChessPiece* piece = GetPieceFromType(cell.type);
 
-			std::vector<glm::ivec2> piecePossibleMoves;
-			piece->GetPossibleMoves(cellPos, *this, piecePossibleMoves);
+			std::vector<glm::ivec2> possibleMoves;
+			piece->GetPossibleMoves(cellPos, *this, possibleMoves);
 
-			if (std::find(piecePossibleMoves.begin(), piecePossibleMoves.end(), kingPos) != piecePossibleMoves.end()) {
+			if (std::find(possibleMoves.begin(), possibleMoves.end(), kingPos) != possibleMoves.end()) {
 				return true;
 			}
 		}
@@ -220,7 +220,7 @@ bool ChessBoard::InCheckmate(glm::ivec2 kingPos) {
 			ChessPiece* piece = GetPieceFromType(cell.type);
 
 			std::vector<glm::ivec2> possibleMoves;
-			piece->GetMovesNotInCheck(cellPos, *this, possibleMoves);
+			piece->GetMovesNotInCheck(kingPos, cellPos, *this, possibleMoves);
 
 			if (!possibleMoves.empty()) {
 				return false;

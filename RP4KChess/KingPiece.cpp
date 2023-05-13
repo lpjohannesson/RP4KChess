@@ -16,6 +16,7 @@ void KingPiece::GetPossibleMoves(
 }
 
 void KingPiece::GetMovesNotInCheck(
+	glm::ivec2 kingPos,
 	glm::ivec2 pos,
 	ChessBoard& board,
 	std::vector<glm::ivec2>& result)
