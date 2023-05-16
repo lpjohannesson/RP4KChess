@@ -289,7 +289,6 @@ void ChessBoard::RenderBoard() {
 	SDL_Rect boardRect = GetBoardRect(rectPos);
 
 	engine->SetDrawColor(boardColor);
-	SDL_RenderDrawRect(renderer, &boardRect);
 
 	for (int y = 0; y < size.y; y++) {
 		for (int x = 0; x < size.x; x++) {
@@ -301,6 +300,8 @@ void ChessBoard::RenderBoard() {
 			SDL_RenderFillRect(renderer, &cellRect);
 		}
 	}
+
+	SDL_RenderDrawRect(renderer, &boardRect);
 }
 
 void ChessBoard::RenderPieces() {
