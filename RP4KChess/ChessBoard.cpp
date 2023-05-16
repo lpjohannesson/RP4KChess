@@ -254,7 +254,8 @@ void ChessBoard::Start(ChessEngine* engine) {
 	SDL_Surface* piecesSurface = IMG_Load("assets/pieces.png");
 	piecesTexture.Start(engine->renderer, piecesSurface);
 
-	piecesTextureCellSize = piecesTexture.size / glm::ivec2(6, 2);
+	glm::ivec2 piecesTextureSize = piecesTexture.GetSize();
+	piecesTextureCellSize = piecesTextureSize / glm::ivec2(6, 2);
 }
 
 void ChessBoard::End() {
@@ -278,7 +279,7 @@ void ChessBoard::DrawPiece(ChessCell cell, SDL_Rect* rect) {
 		framePos.x, framePos.y,
 		piecesTextureCellSize.x, piecesTextureCellSize.y };
 
-	SDL_RenderCopy(renderer, piecesTexture.texture, &frameRect, rect);
+	SDL_RenderCopy(renderer, piecesTexture.GetTexture(), &frameRect, rect);
 }
 
 void ChessBoard::RenderBoard() {

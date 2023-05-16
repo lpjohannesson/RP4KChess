@@ -1,5 +1,15 @@
 #include "Texture.h"
 
+SDL_Texture* Texture::GetTexture()
+{
+	return texture;
+}
+
+glm::ivec2 Texture::GetSize()
+{
+	return size;
+}
+
 void Texture::Start(SDL_Renderer* renderer, SDL_Surface* surface) {
 	size = { surface->w, surface->h };
 

@@ -1,16 +1,21 @@
 #include "PawnPiece.h"
+#include <array>
 #include "MoveBuilder.h"
 
 void PawnPiece::GetPossibleMoves(glm::ivec2 pos, ChessBoard& board, std::vector<glm::ivec2>& result) {
 	PieceColor color = board.GetCell(pos).color;
 	int movementSign = (color == PieceColor::Black) ? 1 : -1;
 
-	std::vector<glm::ivec2> capturePoints = {
+	std::array<glm::ivec2, 2> capturePoints = {
 		pos + glm::ivec2(-1, movementSign),
 		pos + glm::ivec2(1, movementSign)
 	};
 
 	for (glm::ivec2 capturePoint : capturePoints) {
+		if (!board.CellInRange(capturePoint)) {
+			continue;
+		}
+
 		ChessCell cell = board.GetCell(capturePoint);
 
 		if (cell.type == PieceType::None) {
@@ -63,18 +68,20 @@ void PawnPiece::GetPossibleMoves(glm::ivec2 pos, ChessBoard& board, std::vector<
 }
 
 void PawnPiece::CellMoved(glm::ivec2 from, glm::ivec2 to, ChessBoard& board) {
-	ChessCell cell = board.GetCell(to);
+	PieceColor color = board.GetCell(to).color;
 
 	bool becomesQueen;
 
-	if (cell.color == PieceColor::Black) {
+	if (color == PieceColor::Black) {
 		becomesQueen = (to.y >= board.GetSize().y - 1);
 	}
 	else {
 		becomesQueen = (to.y <= 0);
 	}
 
-	if (becomesQueen) {
-		board.SetCell(to, { PieceType::Queen, cell.color });
+	if (!becomesQueen) {
+		return;
 	}
+
+	board.SetCell(to, { PieceType::Queen, color });
 }

@@ -186,12 +186,14 @@ void ChessEngine::RenderText(Texture& texture) {
 		boardPos = board.GetBoardPos(),
 		boardSize = board.GetBoardSize();
 
-	SDL_Rect rect = {
-		boardPos.x + (boardSize.x / 2) - (texture.size.x / 2),
-		boardPos.y - texture.size.y - 8,
-		texture.size.x, texture.size.y };
+	glm::ivec2 textureSize = texture.GetSize();
 
-	SDL_RenderCopy(renderer, texture.texture, NULL, &rect);
+	SDL_Rect rect = {
+		boardPos.x + (boardSize.x / 2) - (textureSize.x / 2),
+		boardPos.y - textureSize.y - 8,
+		textureSize.x, textureSize.y };
+
+	SDL_RenderCopy(renderer, texture.GetTexture(), NULL, &rect);
 }
 
 void ChessEngine::Render() {
