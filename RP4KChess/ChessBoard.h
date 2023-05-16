@@ -64,11 +64,11 @@ public:
 
 	PieceColor GetTurnColor();
 
-	glm::ivec2 GetBoardPos();
-	glm::ivec2 GetBoardSize();
+	glm::ivec2 GetRectPos();
+	glm::ivec2 GetRectSize();
 
-	SDL_Rect GetBoardRect(glm::ivec2 boardPos);
-	SDL_Rect GetCellRect(glm::ivec2 pos, glm::ivec2 boardPos);
+	SDL_Rect GetBoardRect(glm::ivec2 rectPos);
+	SDL_Rect GetCellRect(glm::ivec2 pos, glm::ivec2 rectPos);
 
 	ChessCell GetCell(glm::ivec2 pos);
 	void SetCell(glm::ivec2 pos, ChessCell cell);

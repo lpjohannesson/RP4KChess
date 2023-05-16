@@ -61,24 +61,24 @@ PieceColor ChessBoard::GetTurnColor()
 	return turnColor;
 }
 
-glm::ivec2 ChessBoard::GetBoardPos() {
-	glm::ivec2 boardSize = GetBoardSize();
+glm::ivec2 ChessBoard::GetRectPos() {
+	glm::ivec2 rectSize = GetRectSize();
 	glm::ivec2 windowSize = engine->GetWindowSize();
-	return windowSize / 2 - boardSize / 2;
+	return windowSize / 2 - rectSize / 2;
 }
 
-glm::ivec2 ChessBoard::GetBoardSize() {
+glm::ivec2 ChessBoard::GetRectSize() {
 	return size * cellSize;
 }
 
-SDL_Rect ChessBoard::GetBoardRect(glm::ivec2 boardPos) {
-	glm::ivec2 boardSize = GetBoardSize();
+SDL_Rect ChessBoard::GetBoardRect(glm::ivec2 rectPos) {
+	glm::ivec2 rectSize = GetRectSize();
 
-	return { boardPos.x, boardPos.y, boardSize.x, boardSize.y };
+	return { rectPos.x, rectPos.y, rectSize.x, rectSize.y };
 }
 
-SDL_Rect ChessBoard::GetCellRect(glm::ivec2 pos, glm::ivec2 boardPos) {
-	glm::ivec2 cellPos = boardPos + pos * cellSize;
+SDL_Rect ChessBoard::GetCellRect(glm::ivec2 pos, glm::ivec2 rectPos) {
+	glm::ivec2 cellPos = rectPos + pos * cellSize;
 	return { cellPos.x, cellPos.y, cellSize.x, cellSize.y };
 }
 
@@ -285,8 +285,8 @@ void ChessBoard::DrawPiece(ChessCell cell, SDL_Rect* rect) {
 void ChessBoard::RenderBoard() {
 	SDL_Renderer* renderer = engine->renderer;
 
-	glm::ivec2 boardPos = GetBoardPos();
-	SDL_Rect boardRect = GetBoardRect(boardPos);
+	glm::ivec2 rectPos = GetRectPos();
+	SDL_Rect boardRect = GetBoardRect(rectPos);
 
 	engine->SetDrawColor(boardColor);
 	SDL_RenderDrawRect(renderer, &boardRect);
@@ -297,7 +297,7 @@ void ChessBoard::RenderBoard() {
 				continue;
 			}
 
-			SDL_Rect cellRect = GetCellRect({ x, y }, boardPos);
+			SDL_Rect cellRect = GetCellRect({ x, y }, rectPos);
 			SDL_RenderFillRect(renderer, &cellRect);
 		}
 	}
@@ -305,12 +305,12 @@ void ChessBoard::RenderBoard() {
 
 void ChessBoard::RenderPieces() {
 	SDL_Renderer* renderer = engine->renderer;
-	glm::ivec2 boardPos = GetBoardPos();
+	glm::ivec2 rectPos = GetRectPos();
 
 	for (int y = 0; y < size.y; y++) {
 		for (int x = 0; x < size.x; x++) {
 			glm::ivec2 cellPos = { x, y };
-			SDL_Rect cellRect = GetCellRect(cellPos, boardPos);
+			SDL_Rect cellRect = GetCellRect(cellPos, rectPos);
 
 			ChessCell cell = GetCell(cellPos);
 

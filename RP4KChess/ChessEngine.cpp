@@ -70,7 +70,7 @@ void ChessEngine::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 }
 
 void ChessEngine::MouseClicked(glm::ivec2 pos) {
-	glm::ivec2 cellPos = (pos - board.GetBoardPos()) / board.cellSize;
+	glm::ivec2 cellPos = (pos - board.GetRectPos()) / board.cellSize;
 
 	if (isCellSelected) {
 		TryMovingTo(cellPos);
@@ -183,14 +183,14 @@ bool ChessEngine::Update(float delta) {
 
 void ChessEngine::RenderText(Texture& texture) {
 	glm::ivec2
-		boardPos = board.GetBoardPos(),
-		boardSize = board.GetBoardSize();
+		rectPos = board.GetRectPos(),
+		rectSize = board.GetRectSize();
 
 	glm::ivec2 textureSize = texture.GetSize();
 
 	SDL_Rect rect = {
-		boardPos.x + (boardSize.x / 2) - (textureSize.x / 2),
-		boardPos.y - textureSize.y - 8,
+		rectPos.x + (rectSize.x / 2) - (textureSize.x / 2),
+		rectPos.y - textureSize.y - 8,
 		textureSize.x, textureSize.y };
 
 	SDL_RenderCopy(renderer, texture.GetTexture(), NULL, &rect);
@@ -202,8 +202,8 @@ void ChessEngine::Render() {
 
 	board.RenderBoard();
 
-	glm::ivec2 boardPos = board.GetBoardPos();
-	glm::ivec2 boardSize = board.GetBoardSize();
+	glm::ivec2 rectPos = board.GetRectPos();
+	glm::ivec2 rectSize = board.GetRectSize();
 
 	if (isCellSelected) {
 		ChessCell selectedCell = board.GetCell(selectedPos);
@@ -218,7 +218,7 @@ void ChessEngine::Render() {
 			SetDrawColor(moveColor);
 
 			for (glm::ivec2 pos : possibleMoves) {
-				SDL_Rect cellRect = board.GetCellRect(pos, boardPos);
+				SDL_Rect cellRect = board.GetCellRect(pos, rectPos);
 
 				SDL_RenderFillRect(renderer, &cellRect);
 			}
@@ -230,8 +230,8 @@ void ChessEngine::Render() {
 	glm::ivec2 turnRectSize = board.cellSize * 2;
 
 	SDL_Rect turnRect = {
-		boardPos.x + boardSize.x,
-		boardPos.y + boardSize.y - turnRectSize.y,
+		rectPos.x + rectSize.x,
+		rectPos.y + rectSize.y - turnRectSize.y,
 		turnRectSize.x, turnRectSize.y };
 	
 	board.DrawPiece({ PieceType::King, board.GetTurnColor() }, &turnRect);
