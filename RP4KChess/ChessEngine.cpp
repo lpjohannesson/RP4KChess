@@ -1,7 +1,7 @@
 #include "ChessEngine.h"
 
 glm::ivec2 ChessEngine::GetWindowSize() {
-	glm::ivec2 windowSize;
+	glm::ivec2 windowSize{};
 	SDL_GetWindowSize(window, &windowSize.x, &windowSize.y);
 
 	return windowSize;
