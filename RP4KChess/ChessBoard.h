@@ -67,7 +67,7 @@ public:
 	glm::ivec2 GetRectPos();
 	glm::ivec2 GetRectSize();
 
-	SDL_Rect GetBoardRect(glm::ivec2 rectPos);
+	SDL_Rect GetRect(glm::ivec2 rectPos);
 	SDL_Rect GetCellRect(glm::ivec2 pos, glm::ivec2 rectPos);
 
 	ChessCell GetCell(glm::ivec2 pos);

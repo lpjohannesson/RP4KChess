@@ -71,7 +71,7 @@ glm::ivec2 ChessBoard::GetRectSize() {
 	return size * cellSize;
 }
 
-SDL_Rect ChessBoard::GetBoardRect(glm::ivec2 rectPos) {
+SDL_Rect ChessBoard::GetRect(glm::ivec2 rectPos) {
 	glm::ivec2 rectSize = GetRectSize();
 
 	return { rectPos.x, rectPos.y, rectSize.x, rectSize.y };
@@ -286,7 +286,7 @@ void ChessBoard::RenderBoard() {
 	SDL_Renderer* renderer = engine->renderer;
 
 	glm::ivec2 rectPos = GetRectPos();
-	SDL_Rect boardRect = GetBoardRect(rectPos);
+	SDL_Rect rect = GetRect(rectPos);
 
 	engine->SetDrawColor(boardColor);
 
@@ -301,7 +301,7 @@ void ChessBoard::RenderBoard() {
 		}
 	}
 
-	SDL_RenderDrawRect(renderer, &boardRect);
+	SDL_RenderDrawRect(renderer, &rect);
 }
 
 void ChessBoard::RenderPieces() {
