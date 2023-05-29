@@ -9,9 +9,10 @@ glm::ivec2 ChessEngine::GetWindowSize() {
 
 void ChessEngine::CreateTextTexture(Texture& texture, const char* text, glm::ivec4 color) {
 	SDL_Color sdlColor = { color.r, color.g, color.b, color.a };
+	SDL_Surface* surface = TTF_RenderText_Blended(font, text, sdlColor);
 
 	texture.Start(
-		renderer, TTF_RenderText_Blended(font, text, sdlColor));
+		renderer, surface);
 }
 
 void ChessEngine::SetDrawColor(glm::ivec4 color) {
