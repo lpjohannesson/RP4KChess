@@ -51,8 +51,6 @@ private:
 
 	int GetCellIndex(glm::ivec2 pos);
 
-	void ScanForInCheck();
-
 public:
 	glm::ivec2 cellSize = { 48, 48 };
 	glm::ivec4 boardColor = { 255, 255, 255, 255 };

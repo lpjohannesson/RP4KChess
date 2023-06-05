@@ -34,12 +34,16 @@ public:
 	glm::ivec2 GetWindowSize();
 	void SetDrawColor(glm::ivec4 color);
 
+	glm::ivec2 GetKingPos(PieceColor color);
+
 	void TrySelecting(glm::ivec2 pos);
 	void TryMovingTo(glm::ivec2 pos);
 
 	void MoveCell(glm::ivec2 from, glm::ivec2 to);
 
 	void MouseClicked(glm::ivec2 pos);
+
+	void ScanForInCheck();
 
 	void EnteredCheck(PieceColor color);
 	void EnteredCheckmate(PieceColor color);
@@ -48,6 +52,6 @@ public:
 	void End();
 	bool Update(float delta);
 	
-	void RenderText(Texture& texture);
+	void RenderText();
 	void Render();
 };

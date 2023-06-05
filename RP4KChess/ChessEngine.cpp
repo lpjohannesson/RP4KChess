@@ -8,11 +8,10 @@ glm::ivec2 ChessEngine::GetWindowSize() {
 }
 
 void ChessEngine::CreateTextTexture(Texture& texture, const char* text, glm::ivec4 color) {
-	SDL_Color sdlColor = { color.r, color.g, color.b, color.a };
+	SDL_Color sdlColor{ color.r, color.g, color.b, color.a };
 	SDL_Surface* surface = TTF_RenderText_Blended(font, text, sdlColor);
 
-	texture.Start(
-		renderer, surface);
+	texture.Start(renderer, surface);
 }
 
 void ChessEngine::SetDrawColor(glm::ivec4 color) {
@@ -31,9 +30,10 @@ void ChessEngine::TrySelecting(glm::ivec2 pos) {
 	}
 
 	ChessPiece* piece = board.GetPieceFromType(cell.type);
-	glm::ivec2 kingPos = board.FindCell({ PieceType::King, cell.color });
+	glm::ivec2 kingPos = GetKingPos(cell.color);
 
 	std::vector<glm::ivec2> possibleMoves;
+
 	piece->GetMovesNotInCheck(kingPos, pos, board, possibleMoves);
 
 	if (possibleMoves.empty()) {
@@ -52,7 +52,7 @@ void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 	}
 
 	ChessPiece* piece = board.GetPieceFromType(cell.type);
-	glm::ivec2 kingPos = board.FindCell({ PieceType::King, cell.color });
+	glm::ivec2 kingPos = GetKingPos(cell.color);
 
 	std::vector<glm::ivec2> possibleMoves;
 	piece->GetMovesNotInCheck(kingPos, selectedPos, board, possibleMoves);
@@ -65,9 +65,10 @@ void ChessEngine::TryMovingTo(glm::ivec2 pos) {
 }
 
 void ChessEngine::MoveCell(glm::ivec2 from, glm::ivec2 to) {
-	currentTextTexture = nullptr;
-
 	board.MoveCell(from, to);
+
+	currentTextTexture = nullptr;
+	ScanForInCheck();
 }
 
 void ChessEngine::MouseClicked(glm::ivec2 pos) {
@@ -83,12 +84,45 @@ void ChessEngine::MouseClicked(glm::ivec2 pos) {
 	Render();
 }
 
+glm::ivec2 ChessEngine::GetKingPos(PieceColor color)
+{
+	return  board.FindCell({ PieceType::King, color });
+}
+
+void ChessEngine::ScanForInCheck() {
+	glm::ivec2
+		blackKingPos = GetKingPos(PieceColor::Black),
+		whiteKingPos = GetKingPos(PieceColor::White);
+
+	if (board.InCheck(blackKingPos)) {
+		if (board.InCheckmate(blackKingPos)) {
+			EnteredCheckmate(PieceColor::Black);
+		}
+		else {
+			EnteredCheck(PieceColor::Black);
+		}
+
+		return;
+	}
+
+	if (board.InCheck(whiteKingPos)) {
+		if (board.InCheckmate(whiteKingPos)) {
+			EnteredCheckmate(PieceColor::White);
+		}
+		else {
+			EnteredCheck(PieceColor::White);
+		}
+
+		return;
+	}
+}
+
 void ChessEngine::EnteredCheck(PieceColor color) {
-	currentTextTexture = color == PieceColor::Black ? &blackCheckTexture : &whiteCheckTexture;
+	currentTextTexture = (color == PieceColor::Black) ? &blackCheckTexture : &whiteCheckTexture;
 }
 
 void ChessEngine::EnteredCheckmate(PieceColor color) {
-	currentTextTexture = color == PieceColor::Black ? &whiteCheckmateTexture : &blackCheckmateTexture;
+	currentTextTexture = (color == PieceColor::Black) ? &whiteCheckmateTexture : &blackCheckmateTexture;
 }
 
 void ChessEngine::Start() {
@@ -182,19 +216,23 @@ bool ChessEngine::Update(float delta) {
 	return true;
 }
 
-void ChessEngine::RenderText(Texture& texture) {
+void ChessEngine::RenderText() {
+	if (currentTextTexture == nullptr) {
+		return;
+	}
+
 	glm::ivec2
 		rectPos = board.GetRectPos(),
 		rectSize = board.GetRectSize();
 
-	glm::ivec2 textureSize = texture.GetSize();
+	glm::ivec2 textureSize = currentTextTexture->GetSize();
 
 	SDL_Rect rect = {
 		rectPos.x + (rectSize.x / 2) - (textureSize.x / 2),
 		rectPos.y - textureSize.y - 8,
 		textureSize.x, textureSize.y };
 
-	SDL_RenderCopy(renderer, texture.GetTexture(), NULL, &rect);
+	SDL_RenderCopy(renderer, currentTextTexture->GetTexture(), NULL, &rect);
 }
 
 void ChessEngine::Render() {
@@ -211,7 +249,7 @@ void ChessEngine::Render() {
 
 		if (selectedCell.type != PieceType::None) {
 			ChessPiece* piece = board.GetPieceFromType(selectedCell.type);
-			glm::ivec2 kingPos = board.FindCell({ PieceType::King, selectedCell.color });
+			glm::ivec2 kingPos = GetKingPos(selectedCell.color);
 
 			std::vector<glm::ivec2> possibleMoves;
 			piece->GetMovesNotInCheck(kingPos, selectedPos, board, possibleMoves);
@@ -237,9 +275,7 @@ void ChessEngine::Render() {
 	
 	board.DrawPiece({ PieceType::King, board.GetTurnColor() }, &turnRect);
 
-	if (currentTextTexture != nullptr) {
-		RenderText(*currentTextTexture);
-	}
+	RenderText();
 
 	SDL_RenderPresent(renderer);
 }

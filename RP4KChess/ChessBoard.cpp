@@ -7,34 +7,6 @@ int ChessBoard::GetCellIndex(glm::ivec2 pos) {
 	return pos.y * size.x + pos.x;
 }
 
-void ChessBoard::ScanForInCheck() {
-	glm::ivec2
-		blackKingPos = FindCell({ PieceType::King, PieceColor::Black }),
-		whiteKingPos = FindCell({ PieceType::King, PieceColor::White });
-
-	if (InCheck(blackKingPos)) {
-		if (InCheckmate(blackKingPos)) {
-			engine->EnteredCheckmate(PieceColor::Black);
-		}
-		else {
-			engine->EnteredCheck(PieceColor::Black);
-		}
-
-		return;
-	}
-
-	if (InCheck(whiteKingPos)) {
-		if (InCheckmate(whiteKingPos)) {
-			engine->EnteredCheckmate(PieceColor::White);
-		}
-		else {
-			engine->EnteredCheck(PieceColor::White);
-		}
-
-		return;
-	}
-}
-
 ChessBoard::ChessBoard(glm::ivec2 size) {
 	SetSize(size);
 }
@@ -98,11 +70,10 @@ void ChessBoard::SetCell(glm::ivec2 pos, ChessCell cell) {
 	cells[GetCellIndex(pos)] = cell;
 }
 
-glm::ivec2 ChessBoard::FindCell(ChessCell cell)
-{
+glm::ivec2 ChessBoard::FindCell(ChessCell cell) {
 	for (int y = 0; y < size.y; y++) {
 		for (int x = 0; x < size.x; x++) {
-			glm::ivec2 pos = { x, y };
+			glm::ivec2 pos{ x, y };
 			ChessCell foundCell = GetCell(pos);
 
 			if (foundCell.type == cell.type && foundCell.color == cell.color) {
@@ -132,8 +103,6 @@ void ChessBoard::MoveCell(glm::ivec2 from, glm::ivec2 to) {
 	else {
 		turnColor = PieceColor::Black;
 	}
-
-	ScanForInCheck();
 }
 
 bool ChessBoard::CellInRange(glm::ivec2 pos) {
@@ -170,14 +139,13 @@ ChessPiece* ChessBoard::GetPieceFromType(PieceType type) {
 	}
 }
 
-bool ChessBoard::InCheck(glm::ivec2 kingPos)
-{
+bool ChessBoard::InCheck(glm::ivec2 kingPos) {
 	ChessCell kingCell = GetCell(kingPos);
 
 	for (int y = 0; y < size.y; y++) {
 		for (int x = 0; x < size.x; x++) {
-			glm::ivec2 cellPos = { x, y };
-			ChessCell cell = GetCell(cellPos);
+			glm::ivec2 pos{ x, y };
+			ChessCell cell = GetCell(pos);
 
 			if (cell.type == PieceType::None) {
 				continue;
@@ -190,7 +158,7 @@ bool ChessBoard::InCheck(glm::ivec2 kingPos)
 			ChessPiece* piece = GetPieceFromType(cell.type);
 
 			std::vector<glm::ivec2> possibleMoves;
-			piece->GetPossibleMoves(cellPos, *this, possibleMoves);
+			piece->GetPossibleMoves(pos, *this, possibleMoves);
 
 			if (std::find(possibleMoves.begin(), possibleMoves.end(), kingPos) != possibleMoves.end()) {
 				return true;

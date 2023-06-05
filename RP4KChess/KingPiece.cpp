@@ -24,13 +24,12 @@ void KingPiece::GetMovesNotInCheck(
 	std::vector<glm::ivec2> possibleMoves;
 	GetPossibleMoves(pos, board, possibleMoves);
 
-	ChessCell kingCell = board.GetCell(pos);
+	ChessCell cell = board.GetCell(pos);
 	board.SetCell(pos, { PieceType::None });
 
 	for (glm::ivec2 move : possibleMoves) {
 		ChessCell previousCell = board.GetCell(move);
-
-		board.SetCell(move, kingCell);
+		board.SetCell(move, cell);
 
 		if (!board.InCheck(move)) {
 			result.push_back(move);
@@ -39,5 +38,5 @@ void KingPiece::GetMovesNotInCheck(
 		board.SetCell(move, previousCell);
 	}
 
-	board.SetCell(pos, kingCell);
+	board.SetCell(pos, cell);
 }
